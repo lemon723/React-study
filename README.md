@@ -1,70 +1,84 @@
-# Getting Started with Create React App
+# React 영화 웹서비스 만들기
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+---
 
-## Available Scripts
+**리액트를 처음 접해보고, 그날 떠오른 것을 Markdown 문법 연습도 겸해서 간단하게 정리해 보았습니다.**
 
-In the project directory, you can run:
+### 1. JSX
 
-### `npm start`
+---
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- JSX(JavaScript XML)는 Javascript에 XML을 추가한 확장한 문법이다.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- Babel을 사용하여 일반 자바스크립트 형태의 코드로 변환된다.
 
-### `npm test`
+### 2. useState
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+---
 
-### `npm run build`
+```javascript
+const [value, setValue] = useState(0);
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- `value`는 저장된 값. 즉 `useState(0)`에서 0의 값을 갖게 된다.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- `setValue`의 경우 `value`가 변경된 값을 저장할 수 있게 만들어 준다.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### 3. Props
 
-### `npm run eject`
+---
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+- `props(property)`란 상위 컴포넌트에서 하위 컴포넌트로 값을 전달할 때 사용하는 속성이다.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- 상위 컴포넌트가 하위 컴포넌트에 값을 전달하기 때문에 단방향 데이터 흐름을 갖는다.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+- 부모 컴포넌트는 수정 가능하지만, 자식 컴포넌트는 읽기만 가능하다.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+##### prop-types
 
-## Learn More
+- `prop`의 타입을 명시해서 에러를 방지하는 역할을 한다.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```javascript
+Btn.propTypes = {
+  text: PropTypes.string,
+  fontSize: PropTypes.number,
+};
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+- _나중에 TypeScript로 대체 가능하지 않을까 생각해 보았다._
 
-### Code Splitting
+### 4. Create-React-App
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+---
 
-### Analyzing the Bundle Size
+- 초기 환경을 일일히 설정하지 않고, 리액트 프로젝트를 시작할 수 있도록 준비된 일종의 틀
+- 터미널 창에서 `npm start`가 실행되지 않아서 좀 당황했지만, `cd` 몇번으로 쉽게 해결할 수 있었다.
+- Create-React-App에서 터미널로 설치했을 때, 적용되지 않는 오류가 생겼다
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+### 5. useEffect(()=>{})
 
-### Making a Progressive Web App
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+- state가 변할 때마다 리렌더링이 되는데, `useEffect`를 사용하면 이를 방지할 수 있다.
 
-### Advanced Configuration
+- 첫번째 인자는 제한 하고 싶은 내용. 두번째 인자인 `Deps`가 없을 경우 최초 1회 실행, 있을 경우 해당 값이 변할 경우 실행한다.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+- `Deps`는 여러개 입력이 가능하다.
 
-### Deployment
+```javascript
+console.log("Re-render");
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+useEffect(() => {
+  console.log("CALL THE API");
+}, []);
 
-### `npm run build` fails to minify
+useEffect(() => {
+  if (keyword !== "" && keyword.length > 5) {
+    console.log("SEARCH FOR", keyword);
+  }
+}, [keyword]);
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+> 연습하면서 `console.log()`가 두번씩 찍혔는데, `<React.StrictMode>`가 `<App/>`을 감싸고 있어서 그랬다.
+> 개발 단계의 오류를 잘 잡기 위해서 그렇다고 한다.
+> https://velog.io/@hyes-y-tag/React-useEffect%EA%B0%80-%EB%91%90%EB%B2%88-%EC%8B%A4%ED%96%89%EB%90%9C%EB%8B%A4%EA%B3%A0
